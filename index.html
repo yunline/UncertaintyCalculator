@@ -1,0 +1,157 @@
+<head>
+    <title>不确定度计算器</title>
+    <meta name="viewport" content="user-scalable=no">
+    <style>
+        body{
+            font-size: 50px;
+        }
+        textarea.input{
+            width: 90%;
+            height: 6em;
+            border-style: groove;
+            font-size: 50px;
+            box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
+        }
+        input.input{
+            font-size: 1em;
+            margin-top: 1em;
+            margin-left: 0em;
+            height: 1.2em;
+            width:8em;
+            border-width: 0.1em;
+            border-style: groove;
+        }
+        button.input{
+            font-size: 2em;
+            width: 80%;
+            height: 2em;
+            border-width: 0.2em;
+            font-style: bold;
+            box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.5);
+        }
+        button.input:active{
+            box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.5);
+            background-color: #aaa;
+            color: #fff;
+            transition-duration: 100ms;
+        }
+        .input{
+            margin-top: 1em;
+            margin-left: 1em;
+            border-style: none; 
+        }
+        .result{
+            border-style: groove;
+        }
+        table.result{
+            font-size: 70px;
+            font-style: italic;
+            margin-left: 1em;
+        }
+        td{
+            width: 50%;
+        }
+        div.result{
+            margin-top: 1em;
+            margin-left: 1em;
+            border-style: none;
+        }
+        .input_oneline{
+            display: flex;
+        }
+    </style>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>
+        function sum(array){
+            var s=0;
+            for(i of array){
+                s+=i;
+            }
+            return s;
+        }
+        function variance(array,avr){
+            var s=0
+            for(i of array){
+                s+=Math.pow(i-avr,2);
+            }
+            return s/array.length;
+        }
+        function get_tp(len){
+            return [2,2,1.84,1.32,1.20,1.14,1.11,1.09,1.08,1.07,1.06,1.05,1][Math.min(len,12)];
+        }
+        function run_calc(){
+            var input=$("#data_input").val().split(",");
+            var data=[];
+            for(var i of input){
+                data.push(parseFloat(i));
+            }
+
+            average=sum(data)/data.length;
+            s2x=variance(data,average);
+            sx=Math.pow(s2x,0.5);
+            tp=get_tp(data.length);
+            sigma_r=tp*sx;
+            sigma_m=parseFloat($("#sigma_m_input").val());
+            sigma_x=Math.pow(Math.pow(sigma_r,2)+Math.pow(sigma_m,2),0.5);
+            e_x=String(sigma_x/average*100)+"%"
+
+            $("#num").text(data.length);
+            $("#avrx").text(average);
+            $("#s2x").text(s2x);
+            $("#sx").text(sx);
+            $("#tp").text(tp);
+            $("#sigmar").text(sigma_r);
+            $("#sigmam").text(sigma_m);
+            $("#sigmax").text(sigma_x);
+       }
+    </script>
+</head>
+<body>
+    <div class="input">
+        <h2>数据输入</h2>
+        <p>测量数据,分隔符为逗号</p>
+        <textarea class="input" id="data_input" placeholder="请输入测量数据"></textarea>
+        <li class="input">
+            σ<sub>量具</sub>
+            <input class="input" value="0" id="sigma_m_input"/>
+        </li>
+        <button class="input"  onClick="run_calc()">计算</button>
+    </div>
+    <div class="result">
+        <h2>计算结果</h2>
+        <table class="result">
+            <tr>
+                <td>n</td>
+                <td id="num">3</td>
+            </tr>
+            <tr>
+                <td>Avr<sub>x</sub></td>
+                <td id="avrx">NULL</td>
+            </tr>
+            <tr>
+                <td>S²<sub>x</sub></td>
+                <td id="s2x">NULL</td>
+            </tr>
+            <tr>
+                <td>S<sub>x</sub></td>
+                <td id="sx">NULL</td>
+            </tr>
+            <tr>
+                <td>t<sub>p</sub></td>
+                <td id="tp">NULL</td>
+            </tr>
+            <tr>
+                <td>σ<sub>随机</sub></td>
+                <td id="sigmar">NULL</td>
+            </tr>
+            <tr>
+                <td>σ<sub>量具</sub></td>
+                <td id="sigmam">NULL</td>
+            </tr>
+            <tr>
+                <td>σ<sub>x</sub></td>
+                <td id="sigmax">NULL</td>
+            </tr>
+        </table>
+    </div>
+</body>
