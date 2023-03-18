@@ -83,7 +83,7 @@
             var input=$("#data_input").val().split(",");
             var data=[];
             for(var i of input){
-                data.push(parseFloat(i));
+                data.push(eval(i));
             }
 
             average=sum(data)/data.length;
@@ -91,7 +91,7 @@
             sx=Math.pow(s2x,0.5);
             tp=get_tp(data.length);
             sigma_r=tp*sx;
-            sigma_m=parseFloat($("#sigma_m_input").val());
+            sigma_m=eval($("#sigma_m_input").val());
             sigma_x=Math.pow(Math.pow(sigma_r,2)+Math.pow(sigma_m,2),0.5);
             e_x=String(sigma_x/average*100)+"%"
 
